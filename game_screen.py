@@ -1,10 +1,10 @@
 import pygame
-from config import FPS, WIDTH, HEIGHT, BLACK, YELLOW, RED
+from config import FPS, LARGURA, ALTURA, BLACK, YELLOW, RED
 from assets import load_assets, DESTROY_SOUND, BOOM_SOUND, BACKGROUND, SCORE_FONT
 from sprites import Ship, Meteor, Bullet, Explosion
 
 
-def game_screen(window):
+def game_screen(janela):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
 
@@ -31,11 +31,11 @@ def game_screen(window):
     DONE = 0
     PLAYING = 1
     EXPLODING = 2
-    state = PLAYING
+    estado = PLAYING
 
     keys_down = {}
     score = 0
-    lives = 3
+    vidas = 3
 
     # ===== Loop principal =====
     pygame.mixer.music.play(loops=-1)
@@ -46,9 +46,9 @@ def game_screen(window):
         for event in pygame.event.get():
             # ----- Verifica consequências
             if event.type == pygame.QUIT:
-                state = DONE
+                estado = DONE
             # Só verifica o teclado se está no estado de jogo
-            if state == PLAYING:
+            if estado == PLAYING:
                 # Verifica se apertou alguma tecla.
                 if event.type == pygame.KEYDOWN:
                     # Dependendo da tecla, altera a velocidade.
@@ -72,7 +72,7 @@ def game_screen(window):
         # Atualizando a posição dos meteoros
         all_sprites.update()
 
-        if state == PLAYING:
+        if estado == PLAYING:
             # Verifica se houve colisão entre tiro e meteoro
             hits = pygame.sprite.groupcollide(all_meteors, all_bullets, True, True, pygame.sprite.collide_mask)
             for meteor in hits: # As chaves são os elementos do primeiro grupo (meteoros) que colidiram com alguma bala
@@ -89,7 +89,7 @@ def game_screen(window):
                 # Ganhou pontos!
                 score += 100
                 if score % 1000 == 0:
-                    lives += 1
+                    vidas += 1
 
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
@@ -97,39 +97,39 @@ def game_screen(window):
                 # Toca o som da colisão
                 assets[BOOM_SOUND].play()
                 player.kill()
-                lives -= 1
+                vidas -= 1
                 explosao = Explosion(player.rect.center, assets)
                 all_sprites.add(explosao)
                 state = EXPLODING
                 keys_down = {}
                 explosion_tick = pygame.time.get_ticks()
                 explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
-        elif state == EXPLODING:
+        elif estado == EXPLODING:
             now = pygame.time.get_ticks()
             if now - explosion_tick > explosion_duration:
-                if lives == 0:
-                    state = DONE
+                if vidas == 0:
+                    estado = DONE
                 else:
-                    state = PLAYING
+                    estado = PLAYING
                     player = Ship(groups, assets)
                     all_sprites.add(player)
 
         # ----- Gera saídas
-        window.fill(BLACK)  # Preenche com a cor branca
-        window.blit(assets[BACKGROUND], (0, 0))
+        janela.fill(BLACK)  # Preenche com a cor branca
+        janela.blit(assets[BACKGROUND], (0, 0))
         # Desenhando meteoros
-        all_sprites.draw(window)
+        all_sprites.draw(janela)
 
         # Desenhando o score
         text_surface = assets[SCORE_FONT].render("{:08d}".format(score), True, YELLOW)
         text_rect = text_surface.get_rect()
-        text_rect.midtop = (WIDTH / 2,  10)
-        window.blit(text_surface, text_rect)
+        text_rect.midtop = (LARGURA / 2,  10)
+        janela.blit(text_surface, text_rect)
 
         # Desenhando as vidas
-        text_surface = assets[SCORE_FONT].render(chr(9829) * lives, True, RED)
+        text_surface = assets[SCORE_FONT].render(chr(9829) * vidas, True, RED)
         text_rect = text_surface.get_rect()
-        text_rect.bottomleft = (10, HEIGHT - 10)
-        window.blit(text_surface, text_rect)
+        text_rect.bottomleft = (10, ALTURA - 10)
+        janela.blit(text_surface, text_rect)
 
         pygame.display.update()  # Mostra o novo frame para o jogador

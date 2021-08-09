@@ -6,15 +6,15 @@ SND_DIR = path.join(path.dirname(__file__), 'assets', 'snd')
 FNT_DIR = path.join(path.dirname(__file__), 'assets', 'font')
 
 # Dados gerais do jogo.
-WIDTH = 480 # Largura da tela
-HEIGHT = 600 # Altura da tela
+LARGURA = 480 # Largura da tela
+ALTURA = 600 # Altura da tela
 FPS = 60 # Frames por segundo
 
 # Define tamanhos
-METEOR_WIDTH = 50
-METEOR_HEIGHT = 38
-SHIP_WIDTH = 50
-SHIP_HEIGHT = 38
+METEORO_LARGURA= 50
+METEORO_ALTURA = 38
+SHIP_LARGURA = 50
+SHIP_ALTURA = 38
 
 # Define algumas variáveis com as cores básicas
 WHITE = (255, 255, 255)
