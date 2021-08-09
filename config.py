@@ -13,8 +13,12 @@ FPS = 60 # Frames por segundo
 # Define tamanhos
 METEORO_LARGURA= 50
 METEORO_ALTURA = 38
-SHIP_LARGURA = 50
-SHIP_ALTURA = 38
+
+METEORO2_LARGURA= 100
+METEORO2_ALTURA = 76
+
+NAVE_LARGURA = 50
+NAVE_ALTURA = 38
 
 # Define algumas variáveis com as cores básicas
 WHITE = (255, 255, 255)

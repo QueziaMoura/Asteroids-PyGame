@@ -1,7 +1,7 @@
 import pygame
 from config import FPS, LARGURA, ALTURA, BLACK, YELLOW, RED
-from assets import load_assets, DESTROY_SOUND, BOOM_SOUND, BACKGROUND, SCORE_FONT
-from sprites import Ship, Meteor, Bullet, Explosion
+from assets import load_assets, DESTRUICAO_SOM, EXPLOSAO_SOM, FUNDO, PONTOS_FONT
+from sprites import Nave, Meteor,Meteor2, Tiro, Explosion
 
 
 def game_screen(janela):
@@ -14,13 +14,22 @@ def game_screen(janela):
     all_sprites = pygame.sprite.Group()
     all_meteors = pygame.sprite.Group()
     all_bullets = pygame.sprite.Group()
+
+    all_sprites = pygame.sprite.Group()
+    all_meteors = pygame.sprite.Group()
+    all_bullets = pygame.sprite.Group()
+
+
     groups = {}
+
     groups['all_sprites'] = all_sprites
     groups['all_meteors'] = all_meteors
     groups['all_bullets'] = all_bullets
 
+
+
     # Criando o jogador
-    player = Ship(groups, assets)
+    player = Nave(groups, assets)
     all_sprites.add(player)
     # Criando os meteoros
     for i in range(8):
@@ -28,18 +37,25 @@ def game_screen(janela):
         all_sprites.add(meteor)
         all_meteors.add(meteor)
 
+    # Criando meteoros que tira duas vidas
+    for i in range(3):
+        meteor2 = Meteor2(assets)
+        all_sprites.add(meteor2)
+        all_meteors.add(meteor2)
+
+
     DONE = 0
     PLAYING = 1
     EXPLODING = 2
     estado = PLAYING
 
     keys_down = {}
-    score = 0
-    vidas = 3
+    pontos = 0
+    vidas = 5
 
     # ===== Loop principal =====
     pygame.mixer.music.play(loops=-1)
-    while state != DONE:
+    while estado != DONE:
         clock.tick(FPS)
 
         # ----- Trata eventos
@@ -77,7 +93,7 @@ def game_screen(janela):
             hits = pygame.sprite.groupcollide(all_meteors, all_bullets, True, True, pygame.sprite.collide_mask)
             for meteor in hits: # As chaves são os elementos do primeiro grupo (meteoros) que colidiram com alguma bala
                 # O meteoro e destruido e precisa ser recriado
-                assets[DESTROY_SOUND].play()
+                assets[DESTRUICAO_SOM].play()
                 m = Meteor(assets)
                 all_sprites.add(m)
                 all_meteors.add(m)
@@ -87,47 +103,80 @@ def game_screen(janela):
                 all_sprites.add(explosao)
 
                 # Ganhou pontos!
-                score += 100
-                if score % 1000 == 0:
+                pontos += 100
+                if pontos % 1000 == 0:
+                    vidas += 1
+
+                # Verifica se houve colisão entre tiro e meteoro
+            hits2 = pygame.sprite.groupcollide(all_meteors, all_bullets, True, True, pygame.sprite.collide_mask)
+            for meteor2 in hits2: # As chaves são os elementos do primeiro grupo (meteoros) que colidiram com alguma bala
+                # O meteoro e destruido e precisa ser recriado
+                assets[DESTRUICAO_SOM].play()
+                m2 = Meteor2(assets)
+                all_sprites.add(m2)
+                all_meteors.add(m2)
+
+                # No lugar do meteoro antigo, adicionar uma explosão.
+                explosao = Explosion(meteor.rect.center, assets)
+                all_sprites.add(explosao)
+
+                # Ganhou pontos!
+                pontos += 100
+                if pontos % 1000 == 0:
                     vidas += 1
 
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
             if len(hits) > 0:
                 # Toca o som da colisão
-                assets[BOOM_SOUND].play()
+                assets[EXPLOSAO_SOM].play()
                 player.kill()
                 vidas -= 1
                 explosao = Explosion(player.rect.center, assets)
                 all_sprites.add(explosao)
-                state = EXPLODING
+                estado = EXPLODING
                 keys_down = {}
-                explosion_tick = pygame.time.get_ticks()
-                explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+                momento_explosao = pygame.time.get_ticks()
+                explosao_duracao = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+
+            hits2 = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
+            if len(hits2) > 0:
+                # Toca o som da colisão
+                assets[EXPLOSAO_SOM].play()
+                player.kill()
+                vidas -= 2
+                explosao = Explosion(player.rect.center, assets)
+                all_sprites.add(explosao)
+                estado = EXPLODING
+                keys_down = {}
+                momento_explosao = pygame.time.get_ticks()
+                explosao_duracao = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+
+
         elif estado == EXPLODING:
             now = pygame.time.get_ticks()
-            if now - explosion_tick > explosion_duration:
+            if now - momento_explosao > explosao_duracao:
                 if vidas == 0:
                     estado = DONE
                 else:
                     estado = PLAYING
-                    player = Ship(groups, assets)
+                    player = Nave(groups, assets)
                     all_sprites.add(player)
 
         # ----- Gera saídas
         janela.fill(BLACK)  # Preenche com a cor branca
-        janela.blit(assets[BACKGROUND], (0, 0))
+        janela.blit(assets[FUNDO], (0, 0))
         # Desenhando meteoros
         all_sprites.draw(janela)
 
         # Desenhando o score
-        text_surface = assets[SCORE_FONT].render("{:08d}".format(score), True, YELLOW)
+        text_surface = assets[PONTOS_FONT].render("{:08d}".format(pontos), True, YELLOW)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (LARGURA / 2,  10)
         janela.blit(text_surface, text_rect)
 
         # Desenhando as vidas
-        text_surface = assets[SCORE_FONT].render(chr(9829) * vidas, True, RED)
+        text_surface = assets[PONTOS_FONT].render(chr(9829) * vidas, True, RED)
         text_rect = text_surface.get_rect()
         text_rect.bottomleft = (10, ALTURA - 10)
         janela.blit(text_surface, text_rect)

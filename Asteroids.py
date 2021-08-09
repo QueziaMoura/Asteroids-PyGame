@@ -14,14 +14,14 @@ pygame.mixer.init()
 janela = pygame.display.set_mode((LARGURA,ALTURA))
 pygame.display.set_caption('Asteroids')
 
-state = INIT
-while state != QUIT:
-    if state == INIT:
-        state = init_screen(janela)
-    elif state == GAME:
-        state = game_screen(janela)
+estado = INIT
+while estado != QUIT:
+    if estado == INIT:
+        estado = init_screen(janela)
+    elif estado == GAME:
+        estado = game_screen(janela)
     else:
-        state = QUIT
+        estado = QUIT
 
 # ===== Finalização =====
 pygame.quit()  # Função do PyGame que finaliza os recursos utilizados
