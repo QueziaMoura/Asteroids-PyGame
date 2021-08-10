@@ -15,6 +15,7 @@ class Nave(pygame.sprite.Sprite):
         self.rect.centerx = LARGURA / 2
         self.rect.bottom = ALTURA - 10
         self.speedx = 0
+        self.speedy = 0
         self.groups = groups
         self.assets = assets
 
@@ -25,12 +26,17 @@ class Nave(pygame.sprite.Sprite):
     def update(self):
         # Atualização da posição da nave
         self.rect.x += self.speedx
+        self.rect.y -= self.speedy
 
         # Mantem dentro da tela
         if self.rect.right > LARGURA:
             self.rect.right = LARGURA
         if self.rect.left < 0:
             self.rect.left = 0
+        if self.rect.bottom > ALTURA:
+            self.rect.bottom = ALTURA
+        if self.rect.top < 0:
+            self.rect.top = 0
 
     def shoot(self):
         # Verifica se pode atirar
@@ -72,6 +78,19 @@ class Meteor(pygame.sprite.Sprite):
             self.rect.y = random.randint(-100, -METEORO_LARGURA)
             self.speedx = random.randint(-3, 3)
             self.speedy = random.randint(2, 9)
+
+    def update(self):
+        # Atualizando a posição do meteoro
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        # Se o meteoro passar do final da tela, volta para cima e sorteia
+        # novas posições e velocidades
+        if self.rect.top > ALTURA or self.rect.right < 0 or self.rect.left > LARGURA:
+            self.rect.x = random.randint(0, LARGURA-METEORO_LARGURA)
+            self.rect.y = random.randint(-100, -METEORO_LARGURA)
+            self.speedx = random.randint(-3, 3)
+            self.speedy = random.randint(2, 9)
+
 
 class Meteor2(pygame.sprite.Sprite):
     def __init__(self, assets):

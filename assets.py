@@ -13,6 +13,7 @@ METEOR2_IMG = 'meteor2_img'
 NAVE_IMG = 'ship_img'
 NAVE_IMG = 'ship_img'
 TIRO_IMG = 'bullet_img'
+
 EXPLOSAO_ANIM = 'explosion_anim'
 PONTOS_FONT = 'score_font'
 EXPLOSAO_SOM = 'boom_sound'

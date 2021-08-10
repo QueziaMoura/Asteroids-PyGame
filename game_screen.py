@@ -15,17 +15,11 @@ def game_screen(janela):
     all_meteors = pygame.sprite.Group()
     all_bullets = pygame.sprite.Group()
 
-    all_sprites = pygame.sprite.Group()
-    all_meteors = pygame.sprite.Group()
-    all_bullets = pygame.sprite.Group()
-
-
     groups = {}
 
     groups['all_sprites'] = all_sprites
     groups['all_meteors'] = all_meteors
     groups['all_bullets'] = all_bullets
-
 
 
     # Criando o jogador
@@ -73,6 +67,10 @@ def game_screen(janela):
                         player.speedx -= 8
                     if event.key == pygame.K_RIGHT:
                         player.speedx += 8
+                    if event.key == pygame.K_DOWN:
+                        player.speedy -= 8
+                    if event.key == pygame.K_UP:
+                        player.speedy += 8
                     if event.key == pygame.K_SPACE:
                         player.shoot()
                 # Verifica se soltou alguma tecla.
@@ -83,6 +81,11 @@ def game_screen(janela):
                             player.speedx += 8
                         if event.key == pygame.K_RIGHT:
                             player.speedx -= 8
+                        if event.key == pygame.K_DOWN:
+                            player.speedy += 8
+                        if event.key == pygame.K_UP:
+                            player.speedy -= 8
+
 
         # ----- Atualiza estado do jogo
         # Atualizando a posição dos meteoros
