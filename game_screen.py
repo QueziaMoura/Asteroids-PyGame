@@ -20,19 +20,20 @@ def game_screen(janela):
     groups['all_sprites'] = all_sprites
     groups['all_meteors'] = all_meteors
     groups['all_bullets'] = all_bullets
-
+    
 
     # Criando o jogador
     player = Nave(groups, assets)
     all_sprites.add(player)
+
     # Criando os meteoros
-    for i in range(8):
+    for i in range(5):
         meteor = Meteor(assets)
         all_sprites.add(meteor)
         all_meteors.add(meteor)
 
     # Criando meteoros que tira duas vidas
-    for i in range(3):
+    for i in range(2):
         meteor2 = Meteor2(assets)
         all_sprites.add(meteor2)
         all_meteors.add(meteor2)
@@ -109,6 +110,20 @@ def game_screen(janela):
                 pontos += 100
                 if pontos % 1000 == 0:
                     vidas += 1
+                if pontos % 2000 == 0:
+
+                    # Criando os meteoros:
+                    for i in range(4):
+                        meteor = Meteor(assets)
+                        all_sprites.add(meteor)
+                        all_meteors.add(meteor)
+
+                    # Criando meteoros que tira duas vidas
+                    for i in range(3):
+                        meteor2 = Meteor2(assets)
+                        all_sprites.add(meteor2)
+                        all_meteors.add(meteor2)
+
 
                 # Verifica se houve colisão entre tiro e meteoro
             hits2 = pygame.sprite.groupcollide(all_meteors, all_bullets, True, True, pygame.sprite.collide_mask)
@@ -124,7 +139,7 @@ def game_screen(janela):
                 all_sprites.add(explosao)
 
                 # Ganhou pontos!
-                pontos += 100
+                pontos += 1000
                 if pontos % 1000 == 0:
                     vidas += 1
 
@@ -141,6 +156,7 @@ def game_screen(janela):
                 keys_down = {}
                 momento_explosao = pygame.time.get_ticks()
                 explosao_duracao = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+
 
             hits2 = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
             if len(hits2) > 0:

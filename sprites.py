@@ -67,17 +67,6 @@ class Meteor(pygame.sprite.Sprite):
         self.speedx = random.randint(-3, 3)
         self.speedy = random.randint(2, 9)
 
-    def update(self):
-        # Atualizando a posição do meteoro
-        self.rect.x += self.speedx
-        self.rect.y += self.speedy
-        # Se o meteoro passar do final da tela, volta para cima e sorteia
-        # novas posições e velocidades
-        if self.rect.top > ALTURA or self.rect.right < 0 or self.rect.left > LARGURA:
-            self.rect.x = random.randint(0, LARGURA-METEORO_LARGURA)
-            self.rect.y = random.randint(-100, -METEORO_LARGURA)
-            self.speedx = random.randint(-3, 3)
-            self.speedy = random.randint(2, 9)
 
     def update(self):
         # Atualizando a posição do meteoro
