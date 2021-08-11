@@ -1,5 +1,5 @@
 import pygame
-from config import FPS, LARGURA, ALTURA, BLACK, YELLOW, RED
+from config import FPS, LARGURA, ALTURA, BLACK, GREEN, RED
 from assets import load_assets, DESTRUICAO_SOM, EXPLOSAO_SOM, FUNDO, PONTOS_FONT
 from sprites import Nave, Meteor,Meteor2, Tiro, Explosion
 
@@ -7,7 +7,6 @@ from sprites import Nave, Meteor,Meteor2, Tiro, Explosion
 def game_screen(janela):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
-
     assets = load_assets()
 
     # Criando um grupo de meteoros
@@ -52,7 +51,7 @@ def game_screen(janela):
     pygame.mixer.music.play(loops=-1)
     while estado != DONE:
         clock.tick(FPS)
-
+        
         # ----- Trata eventos
         for event in pygame.event.get():
             # ----- Verifica consequências
@@ -110,19 +109,12 @@ def game_screen(janela):
                 pontos += 100
                 if pontos % 1000 == 0:
                     vidas += 1
-                if pontos % 2000 == 0:
-
+                if pontos % 1500 == 0:
                     # Criando os meteoros:
-                    for i in range(4):
+                    for i in range(5):
                         meteor = Meteor(assets)
                         all_sprites.add(meteor)
                         all_meteors.add(meteor)
-
-                    # Criando meteoros que tira duas vidas
-                    for i in range(3):
-                        meteor2 = Meteor2(assets)
-                        all_sprites.add(meteor2)
-                        all_meteors.add(meteor2)
 
 
                 # Verifica se houve colisão entre tiro e meteoro
@@ -142,6 +134,16 @@ def game_screen(janela):
                 pontos += 1000
                 if pontos % 1000 == 0:
                     vidas += 1
+
+
+                if pontos % 2000 == 0:
+    
+                    # Criando meteoros que tira duas vidas
+                    for i in range(3):
+                        meteor2 = Meteor2(assets)
+                        all_sprites.add(meteor2)
+                        all_meteors.add(meteor2)
+
 
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
@@ -189,7 +191,7 @@ def game_screen(janela):
         all_sprites.draw(janela)
 
         # Desenhando o score
-        text_surface = assets[PONTOS_FONT].render("{:08d}".format(pontos), True, YELLOW)
+        text_surface = assets[PONTOS_FONT].render("{:08d}".format(pontos), True, GREEN)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (LARGURA / 2,  10)
         janela.blit(text_surface, text_rect)
