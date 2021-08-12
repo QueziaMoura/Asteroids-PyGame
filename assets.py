@@ -30,7 +30,7 @@ def load_assets():
     assets[METEOR_IMG] = pygame.transform.scale(assets['meteor_img'], (METEORO_LARGURA, METEORO_ALTURA))
 
     assets[METEOR2_IMG] = pygame.image.load(os.path.join(IMG_DIR, 'espiral_meteoro.png')).convert_alpha()
-    assets[METEOR2_IMG] = pygame.transform.scale(assets['meteor2_img'], (METEORO2_LARGURA, METEORO2_ALTURA))
+    assets[METEOR2_IMG] = pygame.transform.scale(assets['meteor2_img'], (METEORO_LARGURA, METEORO_ALTURA))
 
     assets[NAVE_IMG] = pygame.image.load(os.path.join(IMG_DIR, 'nave.png')).convert_alpha()
     assets[NAVE_IMG] = pygame.transform.scale(assets['ship_img'], (NAVE_LARGURA, NAVE_ALTURA))

@@ -11,7 +11,7 @@ pygame.init()
 pygame.mixer.init()
 
 # ----- Gera tela principal
-janela = pygame.display.set_mode((LARGURA,ALTURA))
+janela = pygame.display.set_mode((LARGURA,ALTURA), pygame.FULLSCREEN)
 pygame.display.set_caption('Asteroids')
 
 estado = INIT

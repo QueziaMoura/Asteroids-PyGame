@@ -1,4 +1,6 @@
 import pygame
+import math
+import random
 from config import FPS, LARGURA, ALTURA, BLACK, GREEN, RED
 from assets import load_assets, DESTRUICAO_SOM, EXPLOSAO_SOM, FUNDO, PONTOS_FONT
 from sprites import Nave, Meteor, Tiro, Explosion
@@ -25,18 +27,18 @@ def game_screen(janela):
     player = Nave(groups, assets)
     all_sprites.add(player)
 
-    # Criando os meteoros
-    for i in range(6):
-        meteor = Meteor(assets,1)
-        all_sprites.add(meteor)
-        all_meteors.add(meteor)
-
-    # Criando meteoros que tira duas vidas
+    numero_meteoros = 0
     for i in range(2):
-        meteor = Meteor(assets,2)
+        meteor = Meteor(assets, 1)
         all_sprites.add(meteor)
         all_meteors.add(meteor)
-
+        numero_meteoros += 1
+    for i in range(1):
+        meteor = Meteor(assets, 2)
+        all_sprites.add(meteor)
+        all_meteors.add(meteor)
+        numero_meteoros += 1
+    numero_meteoros_inicio = numero_meteoros
 
     DONE = 0
     PLAYING = 1
@@ -129,6 +131,9 @@ def game_screen(janela):
                 keys_down = {}
                 momento_explosao = pygame.time.get_ticks()
                 explosao_duracao = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+                m = Meteor(assets, meteor.forca)
+                all_sprites.add(m)
+                all_meteors.add(m)
 
 
         elif estado == EXPLODING:
@@ -158,5 +163,15 @@ def game_screen(janela):
         text_rect = text_surface.get_rect()
         text_rect.bottomleft = (10, ALTURA - 10)
         janela.blit(text_surface, text_rect)
+
+        # Criação de novos meteoros
+        if numero_meteoros < math.floor(numero_meteoros_inicio + pontos/100):
+            if random.randint(1, 6) <= 2:
+                meteor = Meteor(assets, 1)
+            else:
+                meteor = Meteor(assets, 2)
+            all_sprites.add(meteor)
+            all_meteors.add(meteor)
+            numero_meteoros += 1
 
         pygame.display.update()  # Mostra o novo frame para o jogador
