@@ -1,7 +1,7 @@
 import pygame
 from config import FPS, LARGURA, ALTURA, BLACK, GREEN, RED
 from assets import load_assets, DESTRUICAO_SOM, EXPLOSAO_SOM, FUNDO, PONTOS_FONT
-from sprites import Nave, Meteor,Meteor2, Tiro, Explosion
+from sprites import Nave, Meteor, Tiro, Explosion
 
 
 def game_screen(janela):
@@ -26,16 +26,16 @@ def game_screen(janela):
     all_sprites.add(player)
 
     # Criando os meteoros
-    for i in range(5):
-        meteor = Meteor(assets)
+    for i in range(6):
+        meteor = Meteor(assets,1)
         all_sprites.add(meteor)
         all_meteors.add(meteor)
 
     # Criando meteoros que tira duas vidas
     for i in range(2):
-        meteor2 = Meteor2(assets)
-        all_sprites.add(meteor2)
-        all_meteors.add(meteor2)
+        meteor = Meteor(assets,2)
+        all_sprites.add(meteor)
+        all_meteors.add(meteor)
 
 
     DONE = 0
@@ -97,7 +97,7 @@ def game_screen(janela):
             for meteor in hits: # As chaves são os elementos do primeiro grupo (meteoros) que colidiram com alguma bala
                 # O meteoro e destruido e precisa ser recriado
                 assets[DESTRUICAO_SOM].play()
-                m = Meteor(assets)
+                m = Meteor(assets, meteor.forca)
                 all_sprites.add(m)
                 all_meteors.add(m)
 
@@ -116,56 +116,13 @@ def game_screen(janela):
                         all_sprites.add(meteor)
                         all_meteors.add(meteor)
 
-
-                # Verifica se houve colisão entre tiro e meteoro
-            hits2 = pygame.sprite.groupcollide(all_meteors, all_bullets, True, True, pygame.sprite.collide_mask)
-            for meteor2 in hits2: # As chaves são os elementos do primeiro grupo (meteoros) que colidiram com alguma bala
-                # O meteoro e destruido e precisa ser recriado
-                assets[DESTRUICAO_SOM].play()
-                m2 = Meteor2(assets)
-                all_sprites.add(m2)
-                all_meteors.add(m2)
-
-                # No lugar do meteoro antigo, adicionar uma explosão.
-                explosao = Explosion(meteor.rect.center, assets)
-                all_sprites.add(explosao)
-
-                # Ganhou pontos!
-                pontos += 1000
-                if pontos % 1000 == 0:
-                    vidas += 1
-
-
-                if pontos % 2000 == 0:
-    
-                    # Criando meteoros que tira duas vidas
-                    for i in range(3):
-                        meteor2 = Meteor2(assets)
-                        all_sprites.add(meteor2)
-                        all_meteors.add(meteor2)
-
-
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
-            if len(hits) > 0:
+            for meteor in hits:
                 # Toca o som da colisão
                 assets[EXPLOSAO_SOM].play()
                 player.kill()
-                vidas -= 1
-                explosao = Explosion(player.rect.center, assets)
-                all_sprites.add(explosao)
-                estado = EXPLODING
-                keys_down = {}
-                momento_explosao = pygame.time.get_ticks()
-                explosao_duracao = explosao.frame_ticks * len(explosao.explosion_anim) + 400
-
-
-            hits2 = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
-            if len(hits2) > 0:
-                # Toca o som da colisão
-                assets[EXPLOSAO_SOM].play()
-                player.kill()
-                vidas -= 2
+                vidas -= meteor.forca
                 explosao = Explosion(player.rect.center, assets)
                 all_sprites.add(explosao)
                 estado = EXPLODING
@@ -177,7 +134,7 @@ def game_screen(janela):
         elif estado == EXPLODING:
             now = pygame.time.get_ticks()
             if now - momento_explosao > explosao_duracao:
-                if vidas == 0:
+                if vidas <= 0:
                     estado = DONE
                 else:
                     estado = PLAYING
