@@ -109,14 +109,6 @@ def game_screen(janela):
 
                 # Ganhou pontos!
                 pontos += 100
-                if pontos % 1000 == 0:
-                    vidas += 1
-                if pontos % 1500 == 0:
-                    # Criando os meteoros:
-                    for i in range(5):
-                        meteor = Meteor(assets)
-                        all_sprites.add(meteor)
-                        all_meteors.add(meteor)
 
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)

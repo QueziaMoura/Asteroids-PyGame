@@ -11,13 +11,16 @@ def init_screen(screen):
 
     # Carrega o fundo da tela inicial
     background = pygame.image.load(path.join(IMG_DIR, 'fundo_inicio1.png')).convert()
+    background2 = pygame.image.load(path.join(IMG_DIR, 'fundo_inicio2.png')).convert()
     background_rect = background.get_rect()
 
     running = True
+    img0 = True
     while running:
 
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
+        pygame.time.wait(600)
 
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
@@ -32,7 +35,12 @@ def init_screen(screen):
 
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
-        screen.blit(background, background_rect)
+        if img0 == True:
+            screen.blit(background, background_rect)
+            img0 = False
+        else:
+            screen.blit(background2, background_rect)
+            img0 = True
 
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
