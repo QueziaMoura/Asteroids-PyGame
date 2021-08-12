@@ -41,8 +41,8 @@ def load_assets():
     
     explosion_anim = []
 
-    for i in range(8):
-        # Os arquivos de animação são numerados de 00 a 08
+    for i in range(7):
+        # Os arquivos de animação são numerados de 00 a 06
         filename = os.path.join(IMG_DIR, 'regularExplosion0{}.png'.format(i))
         img = pygame.image.load(filename).convert()
         img = pygame.transform.scale(img, (32, 32))

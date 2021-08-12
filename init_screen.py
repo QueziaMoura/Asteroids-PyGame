@@ -2,7 +2,7 @@ import pygame
 import random
 from os import path
 
-from config import IMG_DIR, BLACK, FPS, GAME, QUIT
+from config import ALTURA, IMG_DIR, BLACK, FPS, GAME, LARGURA, QUIT
 
 
 def init_screen(screen):
@@ -10,7 +10,7 @@ def init_screen(screen):
     clock = pygame.time.Clock()
 
     # Carrega o fundo da tela inicial
-    background = pygame.image.load(path.join(IMG_DIR, 'inicio.png')).convert()
+    background = pygame.image.load(path.join(IMG_DIR, 'fundo_inicio3.png')).convert()
     background_rect = background.get_rect()
 
     running = True
