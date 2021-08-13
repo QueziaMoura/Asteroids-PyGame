@@ -12,6 +12,7 @@ def init_screen(screen):
     # Carrega o fundo da tela inicial
     background = pygame.image.load(path.join(IMG_DIR, 'fundo_inicio1.png')).convert()
     background2 = pygame.image.load(path.join(IMG_DIR, 'fundo_inicio2.png')).convert()
+    instrucoes = pygame.image.load(path.join(IMG_DIR, 'menu.png')).convert()
     background_rect = background.get_rect()
 
     running = True
@@ -44,5 +45,19 @@ def init_screen(screen):
 
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
+    running = True
+    while running:
+        for event in pygame.event.get():
+            # Verifica se foi fechado.
+            if event.type == pygame.QUIT:
+                state = QUIT
+                running = False
+
+            if event.type == pygame.KEYUP:
+                state = GAME
+                running = False
+        screen.blit(instrucoes, background_rect)
+        pygame.display.flip()
+
 
     return state
